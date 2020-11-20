@@ -874,6 +874,20 @@ Maaslin2 <-
         logging::loginfo("Writing fitted values to file %s", fitted_file)
         saveRDS(fit_data$fitted, file = fitted_file)
         
+        ###############################
+        # write models to file #
+        ###############################
+        
+        model_file = file.path(output, "models.rds")
+        # remove model file if already exists
+        if (file.exists(model_file)) {
+          logging::logwarn(
+            "Deleting existing model file: %s", model_file)
+          unlink(model_file)
+        }
+        logging::loginfo("Writing models to file %s", model_file)
+        saveRDS(fit_data$model, file = model_file)
+        
         ########################################################
         # write extracted random effects to file (if specified) #
         ########################################################
