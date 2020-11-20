@@ -248,6 +248,7 @@ fit.data <-
                     output$para <- summary_function(fit)
                     output$residuals <- residuals(fit)
                     output$fitted <- fitted(fit)
+		    output$model <- fit
                     if (!(is.null(random_effects_formula))) {
                       l <- ranef_function(fit)
                       d<-as.vector(unlist(l))
@@ -267,6 +268,7 @@ fit.data <-
                     output$para$name <- colnames(metadata)
                     output$residuals <- NA
                     output$fitted <- NA
+		    output$model <- NA
                     if (!(is.null(random_effects_formula))) output$ranef <- NA
                   }
                 colnames(output$para) <- c('coef', 'stderr' , 'pval', 'name')
@@ -293,8 +295,12 @@ fit.data <-
           do.call(rbind, lapply(outputs, function(x) {
             return(x$fitted)
           }))
-        row.names(fitted) <- colnames(features)   
-        
+        row.names(fitted) <- colnames(features)
+
+        model <-
+          lapply(outputs, `[`, "model")
+        names(model) <- colnames(features)
+
         if (!(is.null(random_effects_formula))) {
           ranef <-
             do.call(rbind, lapply(outputs, function(x) {
@@ -349,9 +355,9 @@ fit.data <-
         rownames(paras)<-NULL
         
         if (!(is.null(random_effects_formula))) {
-          return(list("results" = paras, "residuals" = residuals, "fitted" = fitted, "ranef" = ranef))
+          return(list("results" = paras, "residuals" = residuals, "fitted" = fitted, "model" = model, "ranef" = ranef))
         } else {
-          return(list("results" = paras, "residuals" = residuals, "fitted" = fitted))
+          return(list("results" = paras, "residuals" = residuals, "fitted" = fitted, "model" = model))
         }
     }        
           
